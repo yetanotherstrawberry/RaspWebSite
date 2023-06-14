@@ -1,0 +1,35 @@
+<p *ngIf="availTags === null">Loading...</p>
+
+<form [formGroup]="form">
+  <fieldset *ngIf="availTags !== null">
+    <div class="d-flex flex-column">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Link</mat-label>
+        <input matInput formControlName="link" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Background picture URL</mat-label>
+        <input matInput formControlName="pictureId" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Tags</mat-label>
+        <mat-select [formControl]="selectedTags" [multiple]="true">
+          <mat-option panelWidth="fit-content" *ngFor="let tag of availTags" [value]="tag.id">{{ tag.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </fieldset>
+  <div class="form-buttons">
+    <button mat-raised-button (click)="add()">
+      Add
+    </button>
+  </div>
+</form>

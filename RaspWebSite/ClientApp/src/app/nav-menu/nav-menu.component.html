@@ -1,0 +1,37 @@
+<header>
+  <nav class="navbar navbar-expand-md navbar-toggleable-md border-bottom box-shadow"
+       [ngClass]="(isDarkMode | async) ? 'navbar-dark bg-dark' : 'bg-light'">
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">yetanotherstrawberry</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              aria-label="Toggle navigation"
+              [attr.aria-expanded]="isExpanded"
+              (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse d-m-inline-flex justify-content-end align-items-center"
+           [ngClass]="{ show: isExpanded }">
+        <ul class="navbar-nav flex-grow">
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link" [routerLink]="['/']">Home</a>
+          </li>
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']">
+            <a class="nav-link" [routerLink]="['/portfolio']">Portfolio</a>
+          </li>
+          <li class="nav-item">
+            <mat-slide-toggle class="nav-link"
+                              [checked]="(isDarkMode | async) ?? true"
+                              (change)="toggleDark($event.checked)">
+            </mat-slide-toggle>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

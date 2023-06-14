@@ -1,0 +1,27 @@
+<h1>Login</h1>
+
+<p>Please provide your credentials.</p>
+
+<div class="alert alert-danger" role="alert" *ngIf="loginFailed === true">
+  Login attempt failed.
+</div>
+
+<form [formGroup]="form">
+  <fieldset>
+    <div class="d-flex flex-column">
+      <mat-form-field appearance="fill">
+        <mat-label>Login</mat-label>
+        <input matInput formControlName="userName" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+    </div>
+  </fieldset>
+  <div class="form-buttons">
+    <button mat-raised-button (click)="login()">
+      Login
+    </button>
+  </div>
+</form>

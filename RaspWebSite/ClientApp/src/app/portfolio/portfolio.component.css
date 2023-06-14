@@ -1,0 +1,21 @@
+.tile {
+  background-color: rgb(148, 148, 148, 0.5);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.textShadow {
+  text-shadow: 1px 1px 3px rgb(64, 64, 64);
+}
+
+.tile:hover {
+  background-blend-mode: difference;
+}
+
+.hoverVisible {
+  backdrop-filter: blur(2px);
+}
+
+.hoverer:not(:hover) .hoverVisible, .hoverer:hover .hoverHidden {
+  visibility: hidden;
+}

@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+  <fieldset>
+    <div class="d-flex flex-column">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" />
+      </mat-form-field>
+    </div>
+  </fieldset>
+  <div class="form-buttons">
+    <button mat-raised-button (click)="add()">
+      Add
+    </button>
+  </div>
+</form>

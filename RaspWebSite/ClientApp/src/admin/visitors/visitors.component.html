@@ -1,0 +1,22 @@
+<p *ngIf="visitors === null"><em>Loading...</em></p>
+
+<table class='table table-striped'
+       [ngClass]="{ 'table-dark': (isDarkMode | async) ?? true }"
+       aria-labelledby="tableLabel" *ngIf="visitors !== null">
+  <thead>
+    <tr>
+      <th>IP</th>
+      <th>Visits</th>
+      <th>Last visit</th>
+      <th>GUID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let visitor of visitors">
+      <td>{{ visitor.ip }}</td>
+      <td>{{ visitor.visits }}</td>
+      <td>{{ visitor.lastVisit }}</td>
+      <td>{{ visitor.id }}</td>
+    </tr>
+  </tbody>
+</table>

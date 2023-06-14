@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+  <h1 id="tableLabel" class="m-0">Hello, {{ adminName }}!</h1>
+  <button type="button" class="btn btn-secondary" (click)="logout()">Logout</button>
+</div>
+
+<nav class="navbar">
+    <div class="w-100 navbar"
+         [ngClass]="(isDarkMode | async) ? 'navbar-dark' : ''">
+      <ul class="w-100 navbar-nav flex-row flex-wrap d-flex justify-content-between">
+        <!--<li class="nav-item btn btn-outline-secondary px-1 py-0"
+            [routerLinkActive]="['link-active', 'btn-secondary']"
+            [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" [routerLink]="['/admin']">Admin</a>
+        </li>-->
+        <li class="nav-item btn btn-outline-secondary px-1 py-0"
+            [routerLinkActive]="['link-active', 'btn-secondary']">
+          <a class="nav-link" [routerLink]="['/admin/tiles']">Tiles</a>
+        </li>
+        <li class="nav-item btn btn-outline-secondary px-1 py-0"
+            [routerLinkActive]="['link-active', 'btn-secondary']">
+          <a class="nav-link" [routerLink]="['/admin/newtile']">New tile</a>
+        </li>
+        <li class="nav-item btn btn-outline-secondary px-1 py-0"
+            [routerLinkActive]="['link-active', 'btn-secondary']">
+          <a class="nav-link" [routerLink]="['/admin/newtag']">New tag</a>
+        </li>
+        <li class="nav-item btn btn-outline-secondary px-1 py-0"
+            [routerLinkActive]="['link-active', 'btn-secondary']">
+          <a class="nav-link" [routerLink]="['/admin/tags']">Tags</a>
+        </li>
+        <li class="nav-item btn btn-outline-secondary px-1 py-0"
+            [routerLinkActive]="['link-active', 'btn-secondary']">
+          <a class="nav-link" [routerLink]="['/admin/visitors']">Visitors</a>
+        </li>
+      </ul>
+    </div>
+</nav>
+
+<router-outlet></router-outlet>
