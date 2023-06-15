@@ -20,11 +20,11 @@ namespace RaspWebSite.Controllers
         }
 
         /// <summary>
-        /// Registers a visit.
+        /// Registers or updates a <see cref="Visitor"/>.
         /// </summary>
-        /// <returns><see cref="Visitor"/></returns>
+        /// <returns><see cref="Visitor"/> that viewed the page.</returns>
         [HttpGet]
-        public async Task<Visitor> Visited()
+        public async Task<Visitor> VisitedAsync()
         {
             // RemoteIpAddress may be null, if the controller is accessed by unit tests.
             var currentAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "null";
@@ -50,7 +50,7 @@ namespace RaspWebSite.Controllers
         }
 
         /// <summary>
-        /// Shows all visitors recorded in the database. Requires authorization.
+        /// Shows all <see cref="Visitor"/>s recorded in the database. Requires authorization.
         /// </summary>
         /// <returns>Enumeration of all <see cref="Visitor"/>s.</returns>
         [HttpGet]
@@ -59,6 +59,22 @@ namespace RaspWebSite.Controllers
         {
             _logger.LogDebug("Requested all visitors.");
             return _db.Visitors.OrderBy(visit => visit.LastVisit).AsAsyncEnumerable();
+        }
+
+        /// <summary>
+        /// Removes all rows from the table of <see cref="Visitor"/>s.
+        /// </summary>
+        /// <returns><see cref="OkObjectResult"/> with <see cref="int"/> of removed rows or <see cref="NoContentResult"/> if no table found.</returns>
+        [HttpDelete]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> ClearAsync()
+        {
+            _logger.LogDebug("Received request to clear all visitors.");
+            var tableName = _db.Model.FindEntityType(typeof(Visitor))?.GetTableName();
+            if (string.IsNullOrEmpty(tableName)) return NoContent();
+            else return Ok(await _db.Database.ExecuteSqlRawAsync("TRUNCATE TABLE " + tableName));
         }
 
     }

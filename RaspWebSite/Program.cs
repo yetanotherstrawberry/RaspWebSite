@@ -58,6 +58,7 @@ namespace RaspWebSite
             builder.Services.AddAutoMapper(config =>
             {
                 config.CreateMap<EntryDTO, Entry>();
+                config.CreateMap<Entry, EntryDTO>();
             });
 
             var app = builder.Build();

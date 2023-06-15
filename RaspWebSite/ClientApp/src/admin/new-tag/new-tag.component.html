@@ -1,15 +1,21 @@
-<form [formGroup]="form">
-  <fieldset>
-    <div class="d-flex flex-column">
-      <mat-form-field appearance="fill">
+<h1 mat-dialog-title>Add tag</h1>
+
+<div mat-dialog-content class="pb-0">
+  <form [formGroup]="form">
+    <fieldset>
+      <mat-form-field class="w-100" appearance="fill">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" />
       </mat-form-field>
-    </div>
-  </fieldset>
-  <div class="form-buttons">
-    <button mat-raised-button (click)="add()">
-      Add
-    </button>
-  </div>
-</form>
+    </fieldset>
+  </form>
+</div>
+
+<div mat-dialog-actions class="px-4 justify-content-end">
+  <button mat-icon-button aria-label="Continue" mat-dialog-close cdkFocusInitial (click)="add()">
+    <mat-icon>check_small</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Cancel" mat-dialog-close cdkFocusInitial>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

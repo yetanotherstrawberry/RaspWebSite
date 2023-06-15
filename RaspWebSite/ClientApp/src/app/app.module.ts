@@ -5,29 +5,31 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CanActivateFn, Router, RouterModule } from '@angular/router';
 import { JwtModule } from "@auth0/angular-jwt";
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
 import { VisitorsComponent } from '../admin/visitors/visitors.component';
+import { AdminComponent } from '../admin/admin.component';
+import { TilesComponent } from '../admin/tiles/tiles.component';
+import { NewTileComponent } from '../admin/new-tile/new-tile.component';
+import { NewTagComponent } from '../admin/new-tag/new-tag.component';
+import { TagsComponent } from '../admin/tags/tags.component';
+import { IndexComponent } from '../admin/index/index.component';
+import { LoginComponent } from './login/login.component';
+
+import { AdminModule } from '../admin/admin.module';
+
+import { LoginService } from '../services/login.service';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatBadgeModule } from '@angular/material/badge';
-import { LoginComponent } from './login/login.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoginService } from '../services/login.service';
-import { AdminComponent } from '../admin/admin.component';
-import { TilesComponent } from '../admin/tiles/tiles.component';
-import { AdminModule } from '../admin/admin.module';
-import { IndexComponent } from '../admin/index/index.component';
-import { NewTileComponent } from '../admin/new-tile/new-tile.component';
-import { NewTagComponent } from '../admin/new-tag/new-tag.component';
-import { TagsComponent } from '../admin/tags/tags.component';
+import { MatIconModule } from '@angular/material/icon';
 
 const canActivateTeam: CanActivateFn =
   async (): Promise<boolean> => {
@@ -48,8 +50,7 @@ const canActivateTeam: CanActivateFn =
     NavMenuComponent,
     HomeComponent,
     PortfolioComponent,
-    LoginComponent,
-    IndexComponent
+    LoginComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +68,8 @@ const canActivateTeam: CanActivateFn =
       { path: 'login', component: LoginComponent },
       {
         path: 'admin', component: AdminComponent,
-        canActivate: [canActivateTeam], canActivateChild: [canActivateTeam],
+        canActivate: [canActivateTeam],
+        canActivateChild: [canActivateTeam],
         children: [
           { path: '', component: IndexComponent, pathMatch: 'full' },
           { path: 'visitors', component: VisitorsComponent },
@@ -81,10 +83,10 @@ const canActivateTeam: CanActivateFn =
     MatSlideToggleModule,
     MatButtonModule,
     MatGridListModule,
+    MatIconModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatBadgeModule,
     BrowserAnimationsModule,
     AdminModule,
   ],

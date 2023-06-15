@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RaspWebSite.Models;
 using RaspWebSite.Services;
 
@@ -26,11 +27,11 @@ namespace RaspWebSite.Controllers
         /// Authenticates a user and returns a JWT.
         /// </summary>
         /// <param name="userDTO">Login information.</param>
-        /// <returns><see cref="TokenDTO"/> or <see cref="UnauthorizedObjectResult"/></returns>
+        /// <returns><see cref="OkObjectResult"/> with <see cref="TokenDTO"/> or <see cref="UnauthorizedResult"/></returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO userDTO)
         {
             var user = await _userManager.FindByNameAsync(userDTO.UserName);
             if (user != null)
@@ -50,12 +51,12 @@ namespace RaspWebSite.Controllers
         /// Registers a new user. Requires authorization.
         /// </summary>
         /// <param name="userDTO">User information used to create a new account.</param>
-        /// <returns>200 if user created, 400 if not. Will enumerate errors if model was correct, but operation failed.</returns>
+        /// <returns><see cref="OkResult"/> if user created, otherwise <see cref="BadRequestObjectResult"/> with <see cref="IEnumerable{IdentityError}"/> of <see cref="IdentityError"/>.</returns>
         [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<IdentityError>))]
-        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> RegisterAsync([FromBody] LoginDTO userDTO)
         {
             var usrStatus = await _userManager.CreateAsync(new IdentityUser(userDTO.UserName), userDTO.Password);
             if (usrStatus.Succeeded)
@@ -65,27 +66,34 @@ namespace RaspWebSite.Controllers
         }
 
         /// <summary>
-        /// Executes <see cref="Register(UserDTO)"/> without authorization if there is no account in the database.
+        /// Executes <see cref="Register(LoginDTO)"/> without authorization if there is no account in the database.
         /// </summary>
         /// <param name="userDTO">User information used to create a new account.</param>
-        /// <returns>401 if there is an account, otherwise check <see cref="Register(UserDTO)"/>.</returns>
+        /// <returns><see cref="UnauthorizedResult"/> if there is an account, otherwise check <see cref="Register(LoginDTO)"/>.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<IdentityError>))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> FirstRun([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> FirstRun([FromBody] LoginDTO userDTO)
         {
             if (_userManager.Users.Any()) return Unauthorized();
-            else return await Register(userDTO);
+            else return await RegisterAsync(userDTO);
         }
 
         /// <summary>
-        /// Returns OK. Requires authorization. Use to check if user's session is valid.
+        /// Returns <see cref="OkResult"/>. Requires authorization. Use to check if user's session is valid.
         /// </summary>
-        /// <returns>200</returns>
+        /// <returns><see cref="OkResult"/></returns>
         [Authorize]
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult Ping() => Ok();
+        public OkResult Ping() => Ok();
+
+        [Authorize]
+        [HttpGet]
+        public IAsyncEnumerable<UserDTO> GetAll()
+        {
+            return _userManager.Users.Select(user => new UserDTO { Id = user.Id, Name = user.UserName ?? "UNKNOWN" }).AsAsyncEnumerable();
+        }
 
     }
 }

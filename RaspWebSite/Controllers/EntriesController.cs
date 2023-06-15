@@ -23,31 +23,9 @@ namespace RaspWebSite.Controllers
         }
 
         /// <summary>
-        /// Retrieves and <see cref="Entry"/> from the database.
+        /// Gets every <see cref="Entry"/> in the database with <see cref="Tag"/>s included.
         /// </summary>
-        /// <param name="id">ID of the <see cref="Entry"/> to be retrieved.</param>
-        /// <returns><see cref="OkObjectResult"/> with <see cref="Entry"/>. <see cref="NotFoundObjectResult"/> with <paramref name="id"/> if not found.</returns>
-        [Authorize]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var dbItem = await _db.Entries.Include(entry => entry.Tags).SingleOrDefaultAsync(entry => entry.Id == id);
-            if (dbItem != null)
-            {
-                _logger.LogDebug("Retrieved entry with ID: {id}.", id);
-                return Ok(dbItem);
-            }
-            else
-            {
-                _logger.LogWarning("Could not find an entry with ID: {id}.", id);
-                return NotFound(id);
-            }
-        }
-
-        /// <summary>
-        /// Gets every <see cref="Entry"/> in the database.
-        /// </summary>
-        /// <returns>Enumeration of the requested type.</returns>
+        /// <returns>Returns <see cref="IAsyncEnumerable{Entry}"/> of <see cref="Entry"/> with nested <see cref="Tag"/>s.</returns>
         [HttpGet]
         public IAsyncEnumerable<Entry> GetAll()
         {
@@ -62,12 +40,15 @@ namespace RaspWebSite.Controllers
         /// <returns><see cref="OkObjectResult"/> with <see cref="Entry"/>. <see cref="NotFoundObjectResult"/> with <paramref name="id"/> if not found.</returns>
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Entry))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(int))]
+        public async Task<IActionResult> RemoveAsync(int id)
         {
             var dbItem = await _db.Entries.FindAsync(id);
             if (dbItem != null)
             {
                 _db.Remove(dbItem);
+                await _db.SaveChangesAsync();
                 _logger.LogDebug("Deleted entry with ID: {id}.", id);
                 return Ok(dbItem);
             }
@@ -82,11 +63,14 @@ namespace RaspWebSite.Controllers
         /// Creates an <see cref="Entry"/> in the database.
         /// </summary>
         /// <param name="item"><see cref="Entry"/> to be added.</param>
-        /// <returns><see cref="OkObjectResult"/> with added <see cref="Entry"/>.</returns>
+        /// <returns><see cref="OkObjectResult"/> if added. <see cref="BadRequestObjectResult"/> if <paramref name="item"/>'s ID is not 0. Always nests <paramref name="item"/>.</returns>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] EntryDTO item)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Entry))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Entry))]
+        public async Task<IActionResult> AddAsync([FromBody] EntryDTO item)
         {
+            if (item.Id != 0) return BadRequest(item);
             var newItem = _mapper.Map<Entry>(item);
             newItem.Tags = await _db.Tags.Where(tag => item.TagIds.Contains(tag.Id)).ToListAsync();
             var entityResult = await _db.AddAsync(newItem);
@@ -98,24 +82,27 @@ namespace RaspWebSite.Controllers
         /// <summary>
         /// Edits an <see cref="Entry"/>.
         /// </summary>
-        /// <param name="item">Instance of a <see cref="Entry"/> with a valid ID.</param>
-        /// <returns><see cref="OkObjectResult"/> with <see cref="Entry"/> after edits. <see cref="NotFoundObjectResult"/> with <paramref name="item"/>, if ID not found in the database.</returns>
+        /// <param name="itemDTO">Instance of an <see cref="Entry"/>. Must be supplied in the request body.</param>
+        /// <returns><see cref="OkObjectResult"/> or <see cref="NotFoundObjectResult"/>, if ID not found in the database. Always returns <paramref name="itemDTO"/>.</returns>
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> Edit([FromBody] Entry item)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Entry))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(Entry))]
+        public async Task<IActionResult> EditAsync([FromBody] EntryDTO itemDTO)
         {
-            var dbItem = await _db.Entries.FindAsync(item.Id);
+            var dbItem = await _db.Entries.Include(entry => entry.Tags).SingleOrDefaultAsync(dbItem => dbItem.Id == itemDTO.Id);
             if (dbItem != null)
             {
-                _db.Update(item);
+                _mapper.Map(itemDTO, dbItem);
+                dbItem.Tags = await _db.Tags.Where(tag => itemDTO.TagIds.Contains(tag.Id)).ToListAsync();
                 await _db.SaveChangesAsync();
                 _logger.LogDebug("Edited an entry with ID: {id}.", dbItem.Id);
                 return Ok(dbItem);
             }
             else
             {
-                _logger.LogWarning("Could not edit an entry with ID: {id}.", item.Id);
-                return NotFound(item);
+                _logger.LogWarning("Could not edit an entry with ID: {id}.", itemDTO.Id);
+                return NotFound(itemDTO);
             }
         }
 

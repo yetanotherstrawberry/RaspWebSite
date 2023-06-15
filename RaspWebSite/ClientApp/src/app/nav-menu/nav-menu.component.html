@@ -25,10 +25,18 @@
             <a class="nav-link" [routerLink]="['/portfolio']">Portfolio</a>
           </li>
           <li class="nav-item">
-            <mat-slide-toggle class="nav-link"
-                              [checked]="(isDarkMode | async) ?? true"
-                              (change)="toggleDark($event.checked)">
-            </mat-slide-toggle>
+            <a class="nav-link pt-2 pb-0 h-100 align-items-center" aria-label="Toggle theme"
+               (click)="toggleDark(false)"
+               *ngIf="isDarkMode | async"
+               href="javascript:;">
+              <mat-icon class="navbarThemeSwitcher">dark_mode</mat-icon>
+            </a>
+            <a class="nav-link pt-2 pb-0 h-100 align-items-center" aria-label="Toggle theme"
+               (click)="toggleDark(true)"
+               *ngIf="!(isDarkMode | async)"
+               href="javascript:;">
+              <mat-icon class="navbarThemeSwitcher">light_mode</mat-icon>
+            </a>
           </li>
         </ul>
       </div>

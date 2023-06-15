@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class TileService {
   constructor(private http: HttpClient, @Inject('API_URL') private apiUrl: string) { }
@@ -12,16 +12,28 @@ export class TileService {
     return this.http.get<Tile[]>(this.apiUrl + 'entries/getall');
   }
 
-  public getTile(id: number): Observable<Tile> {
-    return this.http.get<Tile>(this.apiUrl + 'entries/get/' + id.toString());
-  }
-
   public addTile(tile: TileDTO): Observable<Tile> {
     return this.http.post<Tile>(this.apiUrl + 'entries/add', tile);
   }
 
+  public removeTile(tile: Tile): Observable<Tile> {
+    return this.http.delete<Tile>(this.apiUrl + 'entries/remove/' + tile.id.toString());
+  }
+
+  public editTile(tile: TileDTO): Observable<Tile> {
+    return this.http.put<Tile>(this.apiUrl + 'entries/edit', tile);
+  }
+
   public addTag(tag: Tag): Observable<Tag> {
     return this.http.post<Tag>(this.apiUrl + 'tags/add', tag);
+  }
+
+  public editTag(tag: Tag): Observable<Tag> {
+    return this.http.put<Tag>(this.apiUrl + 'tags/edit', tag);
+  }
+
+  public removeTag(tag: Tag): Observable<Tag> {
+    return this.http.delete<Tag>(this.apiUrl + 'tags/remove/' + tag.id.toString());
   }
 
   public getTags(): Observable<Tag[]> {
@@ -39,6 +51,7 @@ export interface Tile {
 }
 
 export interface TileDTO {
+  id?: number;
   pictureId: string;
   tagIds: number[];
   description: string;

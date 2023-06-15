@@ -3,6 +3,7 @@
     public class EntryDTO
     {
 
+        public int Id { get; set; }
         public required string PictureId { get; set; }
         public required ICollection<int> TagIds { get; set; }
         public required string Description { get; set; }

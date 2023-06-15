@@ -1,35 +1,45 @@
-<p *ngIf="availTags === null">Loading...</p>
+<h1 mat-dialog-title>Add tile</h1>
 
-<form [formGroup]="form">
-  <fieldset *ngIf="availTags !== null">
-    <div class="d-flex flex-column">
-      <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" />
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Description</mat-label>
-        <input matInput formControlName="description" />
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Link</mat-label>
-        <input matInput formControlName="link" />
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Background picture URL</mat-label>
-        <input matInput formControlName="pictureId" />
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Tags</mat-label>
-        <mat-select [formControl]="selectedTags" [multiple]="true">
-          <mat-option panelWidth="fit-content" *ngFor="let tag of availTags" [value]="tag.id">{{ tag.name }}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </fieldset>
-  <div class="form-buttons">
-    <button mat-raised-button (click)="add()">
-      Add
-    </button>
+<div mat-dialog-content class="pb-0">
+  <div class="w-100 pt-5 pb-2 d-flex justify-content-center"
+       *ngIf="availTags === null">
+    <mat-spinner></mat-spinner>
   </div>
-</form>
+  <form [formGroup]="form" *ngIf="availTags !== null">
+    <fieldset *ngIf="availTags !== null">
+      <div class="d-flex flex-column">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Link</mat-label>
+          <input matInput formControlName="link" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Background picture URL</mat-label>
+          <input matInput formControlName="pictureId" />
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Tags</mat-label>
+          <mat-select [formControl]="selectedTags" [multiple]="true">
+            <mat-option panelWidth="fit-content" *ngFor="let tag of availTags" [value]="tag.id">{{ tag.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<div mat-dialog-actions class="px-4 justify-content-end">
+  <button mat-icon-button aria-label="Continue" mat-dialog-close cdkFocusInitial (click)="add()">
+    <mat-icon>check_small</mat-icon>
+  </button>
+  <button mat-icon-button aria-label="Cancel" mat-dialog-close cdkFocusInitial>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

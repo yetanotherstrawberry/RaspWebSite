@@ -1,0 +1,36 @@
+<div class="w-100 pt-5 pb-2 d-flex justify-content-center"
+     *ngIf="items === null">
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="items !== null">
+  <table mat-table
+         aria-labelledby="tableLabel"
+         [dataSource]="items"
+         class="mat-elevation-z8">
+    <tr>
+      <!-- This <tr> is to stop Visual Studio from displaying error related to <th> and <td>. -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{element.name}}</td>
+      </ng-container>
+      <ng-container matColumnDef="options">
+        <th mat-header-cell *matHeaderCellDef class="text-end">
+          <button mat-icon-button aria-label="Add new" (click)="openDialog('100ms', '100ms')">
+            <mat-icon>add</mat-icon>
+          </button>
+        </th>
+        <td mat-cell *matCellDef="let element" class="text-end">
+          <button mat-icon-button aria-label="Delete" (click)="delete(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="Edit" (click)="openDialog('100ms', '100ms', element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+    </tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
