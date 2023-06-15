@@ -1,26 +1,28 @@
-<h1>Portfolio</h1>
-
-<p>Feel free to browse my portfolio. Every project listed here is available on my GitHub.</p>
+<div class="w-100 text-center my-4">
+  <p>Hover over a tile to see the description. Click to visit project's GitHub page.</p>
+</div>
 
 <p *ngIf="tiles === null">Loading...</p>
 
-<mat-grid-list gutterSize="12" [cols]="gridColumns" rowHeight="2:1" *ngIf="tiles !== null" (window:resize)="onResize()">
-  <mat-grid-tile *ngFor="let tile of tiles">
-    <a class="rounded hoverer w-100 h-100 d-flex flex-column align-items-start justify-content-end text-decoration-none tile"
-       [style.background-image]="'url(' + tile.pictureId + ')'"
-       href="{{ tile.link }}"
-       target="_blank">
-      <div class="m-3 hoverHidden">
-        <h1 class="text-white textShadow">{{ tile.name }}</h1>
-        <div class="d-flex flex-wrap">
-          <div class="badge text-bg-secondary mt-1 me-2" *ngFor="let tag of tile.tags">
-            <h4 class="m-0">{{ tag.name }}</h4>
+<div *ngIf="tiles !== null">
+  <mat-grid-list gutterSize="12" [cols]="gridColumns" rowHeight="2:1" (window:resize)="onResize()">
+    <mat-grid-tile *ngFor="let tile of tiles">
+      <a class="rounded hoverer w-100 h-100 d-flex flex-column align-items-start justify-content-end text-decoration-none tile"
+         [style.background-image]="'url(' + tile.pictureId + ')'"
+         href="{{ tile.link }}"
+         target="_blank">
+        <div class="m-3 hoverHidden">
+          <h1 class="text-white textShadow">{{ tile.name }}</h1>
+          <div class="d-flex flex-wrap">
+            <div class="badge text-bg-secondary mt-1 me-2" *ngFor="let tag of tile.tags">
+              <h4 class="m-0">{{ tag.name }}</h4>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="text-white textShadow position-absolute top-0 start-0 w-100 h-100 d-flex p-3 hoverVisible">
-        {{ tile.description }}
-      </div>
-    </a>
-  </mat-grid-tile>
-</mat-grid-list>
+        <div class="text-white textShadow position-absolute top-0 start-0 w-100 h-100 d-flex p-3 hoverVisible">
+          {{ tile.description }}
+        </div>
+      </a>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

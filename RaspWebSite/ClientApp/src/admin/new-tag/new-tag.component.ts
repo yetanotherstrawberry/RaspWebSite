@@ -1,6 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { lastValueFrom } from 'rxjs';
 import { Tag, TileService } from '../../services/tile.service';
 
@@ -14,7 +14,8 @@ export class NewTagComponent {
   constructor(
     private fb: FormBuilder,
     private tileSrv: TileService,
-    @Inject(MAT_DIALOG_DATA) public editedItem: Tag)
+    @Inject(MAT_DIALOG_DATA) public editedItem: Tag,
+    public dialogRef: MatDialogRef<NewTagComponent>)
   {
     this.form = this.fb.group({
       name: [editedItem == undefined ? '' : editedItem.name, Validators.required]
@@ -35,6 +36,7 @@ export class NewTagComponent {
           name: this.form.value.name
         }));
       }
+      this.dialogRef.close();
     }
   }
 }

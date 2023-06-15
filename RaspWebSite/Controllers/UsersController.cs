@@ -27,7 +27,7 @@ namespace RaspWebSite.Controllers
         /// Authenticates a user and returns a JWT.
         /// </summary>
         /// <param name="userDTO">Login information.</param>
-        /// <returns><see cref="OkObjectResult"/> with <see cref="TokenDTO"/> or <see cref="UnauthorizedResult"/></returns>
+        /// <returns><see cref="OkObjectResult"/> with <see cref="TokenDTO"/> or <see cref="UnauthorizedObjectResult"/> with <paramref name="userDTO"/>.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -44,7 +44,7 @@ namespace RaspWebSite.Controllers
 
             _logger.LogWarning("Login attempt failed from: {clientAddress}.",
                 Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "null");
-            return Unauthorized();
+            return Unauthorized(userDTO);
         }
 
         /// <summary>

@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RaspWebSite.Models;
 using RaspWebSite.Services;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 namespace RaspWebSite
@@ -11,7 +13,7 @@ namespace RaspWebSite
     public class Program
     {
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +55,7 @@ namespace RaspWebSite
 
             builder.Services.AddScoped<TokenService, TokenService>();
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllers();
 
             builder.Services.AddAutoMapper(config =>
             {
@@ -61,12 +63,17 @@ namespace RaspWebSite
                 config.CreateMap<Entry, EntryDTO>();
             });
 
+            builder.Services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                });
+                config.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+
             var app = builder.Build();
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseHsts();
-            }
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
@@ -77,6 +84,26 @@ namespace RaspWebSite
                 name: "default",
                 pattern: "api/{controller}/{action=Index}/{id?}");
             app.MapFallbackToFile("index.html");
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                await db.Database.MigrateAsync();
+            }
+
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHsts();
+            }
+            else
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                });
+            }
 
             app.Run();
         }

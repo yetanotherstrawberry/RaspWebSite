@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { Tag, Tile, TileService } from '../../services/tile.service';
@@ -18,7 +18,8 @@ export class NewTileComponent {
     private fb: FormBuilder,
     private router: Router,
     private tileSrv: TileService,
-    @Inject(MAT_DIALOG_DATA) public editedItem: Tile)
+    @Inject(MAT_DIALOG_DATA) public editedItem: Tile,
+    public dialogRef: MatDialogRef<NewTileComponent>)
   {
     if (editedItem !== undefined) {
       this.selectedTags.setValue(editedItem.tags.map(tag => tag.id));
@@ -58,6 +59,7 @@ export class NewTileComponent {
           name: this.form.value.name
         }));
       }
+      this.dialogRef.close();
     }
   }
 }

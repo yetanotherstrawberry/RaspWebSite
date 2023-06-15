@@ -9,7 +9,8 @@ const PROXY_CONFIG = [
       "/api",
       "/favicon.ico",
       "/dark.css",
-      "/light.css"
+      "/light.css",
+      "/swagger"
    ],
     target: target,
     secure: false,
