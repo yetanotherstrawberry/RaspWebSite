@@ -26,8 +26,7 @@ namespace RaspWebSite
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-            })
-                .AddEntityFrameworkStores<AppDbContext>();
+            }).AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddAuthentication(options =>
             {
@@ -74,8 +73,6 @@ namespace RaspWebSite
 
             var app = builder.Build();
 
-            app.UseHttpsRedirection();
-
             app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
@@ -91,11 +88,7 @@ namespace RaspWebSite
                 await db.Database.MigrateAsync();
             }
 
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseHsts();
-            }
-            else
+            if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -103,6 +96,16 @@ namespace RaspWebSite
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 });
+            }
+            else
+            {
+                /*
+                 * Uncomment the line below to force HTTPS connection.
+                 * Leave it commented if you are using a proxy which will handle HTTPS.
+                 * If you enable HTTPS here, expose port 443 in Dockerfile and change "useSSL" to true in launchSettings.json.
+                 */
+                //app.UseHttpsRedirection();
+                app.UseHsts();
             }
 
             app.Run();

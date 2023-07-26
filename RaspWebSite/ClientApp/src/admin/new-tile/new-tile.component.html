@@ -14,7 +14,7 @@
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description"></textarea>
+          <textarea matInput formControlName="description" class="min-vh25"></textarea>
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Link</mat-label>
@@ -36,10 +36,10 @@
 </div>
 
 <div mat-dialog-actions class="px-4 justify-content-end">
-  <button mat-icon-button aria-label="Continue" cdkFocusInitial (click)="add()">
+  <button mat-icon-button aria-label="Continue" (click)="add()">
     <mat-icon>check_small</mat-icon>
   </button>
-  <button mat-icon-button aria-label="Cancel" mat-dialog-close cdkFocusInitial>
+  <button mat-icon-button aria-label="Cancel" mat-dialog-close>
     <mat-icon>close</mat-icon>
   </button>
 </div>

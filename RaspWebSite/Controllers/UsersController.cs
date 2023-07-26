@@ -95,5 +95,25 @@ namespace RaspWebSite.Controllers
             return _userManager.Users.Select(user => new UserDTO { Id = user.Id, Name = user.UserName ?? "UNKNOWN" }).AsAsyncEnumerable();
         }
 
+        /// <summary>
+        /// Deletes a user from the database based.
+        /// </summary>
+        /// <param name="userDTO"><see cref="UserDTO"/> of the <see cref="IdentityUser{string}"/> to be deleted. Only ID will be used - name is ignored.</param>
+        /// <returns><see cref="OkObjectResult"/> if deleted, <see cref="NotFoundObjectResult"/> if not found. Always nests <paramref name="userDTO"/>.</returns>
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(UserDTO))]
+        [Authorize]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAsync([FromBody] UserDTO userDTO)
+        {
+            var usr = await _userManager.Users.SingleOrDefaultAsync(dbUsr => dbUsr.Id == userDTO.Id);
+            if (usr == null) return NotFound(userDTO);
+            else
+            {
+                await _userManager.DeleteAsync(usr);
+                return Ok(userDTO);
+            }
+        }
+
     }
 }

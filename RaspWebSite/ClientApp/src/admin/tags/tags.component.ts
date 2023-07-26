@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Tag, TileService } from '../../services/tile.service';
+import { Tag, ApiService } from '../../services/api.service';
 import { NewTagComponent } from '../new-tag/new-tag.component';
 
 @Component({
@@ -18,7 +18,7 @@ export class TagsComponent {
     });
   }
 
-  constructor(private tileSrv: TileService, public dialog: MatDialog) {
+  constructor(private tileSrv: ApiService, public dialog: MatDialog) {
     this.downloadTags();
   }
 

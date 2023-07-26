@@ -25,7 +25,7 @@ export class DarkModeService {
   }
 
   private setStyles(dark: boolean) {
-    this.style.href = `/${this.returnName(dark)}.css`;
+    this.style.href = `${this.returnName(dark)}.css`;
   }
 
   private getLocalStorage(): boolean {

@@ -2,7 +2,10 @@
   <p>Hover over a tile to see the description. Click to visit project's GitHub page.</p>
 </div>
 
-<p *ngIf="tiles === null">Loading...</p>
+<div class="w-100 pt-5 pb-2 d-flex justify-content-center"
+     *ngIf="tiles === null">
+  <mat-spinner></mat-spinner>
+</div>
 
 <div *ngIf="tiles !== null">
   <mat-grid-list gutterSize="12" [cols]="gridColumns" rowHeight="2:1" (window:resize)="onResize()">

@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
-import { Tag, Tile, TileService } from '../../services/tile.service';
+import { Tag, Tile, ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'admin-new-tile',
@@ -17,7 +17,7 @@ export class NewTileComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private tileSrv: TileService,
+    private tileSrv: ApiService,
     @Inject(MAT_DIALOG_DATA) public editedItem: Tile,
     public dialogRef: MatDialogRef<NewTileComponent>)
   {

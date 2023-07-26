@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class TileService {
+export class ApiService {
   constructor(private http: HttpClient, @Inject('API_URL') private apiUrl: string) { }
 
   public getTiles(): Observable<Tile[]> {

@@ -26,8 +26,10 @@ namespace RaspWebSite.Controllers
         [HttpGet]
         public async Task<Visitor> VisitedAsync()
         {
-            // RemoteIpAddress may be null, if the controller is accessed by unit tests.
-            var currentAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "null";
+            var ipBehindProxy = Request.Headers["X-Forwarded-For"].ToString();
+            // connIp may be null, if the controller is accessed by unit tests.
+            var connIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "null";
+            var currentAddress = string.IsNullOrEmpty(ipBehindProxy) ? connIp : ipBehindProxy;
             var dbAddress = await _db.Visitors.SingleOrDefaultAsync(visitor => visitor.IP == currentAddress);
             if (dbAddress == null)
             {

@@ -1,0 +1,9 @@
+import { Component, Inject } from '@angular/core';
+
+@Component({
+  selector: 'app-notfound',
+  templateUrl: './notfound.component.html'
+})
+export class NotFoundComponent {
+  constructor() { }
+}

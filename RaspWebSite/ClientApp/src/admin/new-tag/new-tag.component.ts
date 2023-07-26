@@ -1,31 +1,32 @@
-import { Component, Inject, Input } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { lastValueFrom } from 'rxjs';
-import { Tag, TileService } from '../../services/tile.service';
+import { Tag, ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'admin-new-tag',
   templateUrl: './new-tag.component.html'
 })
 export class NewTagComponent {
-  form: FormGroup;
+  public form: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
-    private tileSrv: TileService,
+    fb: FormBuilder,
+    private tileSrv: ApiService,
     @Inject(MAT_DIALOG_DATA) public editedItem: Tag,
-    public dialogRef: MatDialogRef<NewTagComponent>)
-  {
-    this.form = this.fb.group({
-      name: [editedItem == undefined ? '' : editedItem.name, Validators.required]
+    private dialogRef: MatDialogRef<NewTagComponent>
+  ) {
+    this.form = fb.group({
+      name: [editedItem === undefined ? '' : editedItem.name, Validators.required]
     });
   }
 
-  public async add(): Promise<void> {
+  public async commit(): Promise<void> {
     if (this.form.valid) {
       this.form.disable();
-      if (this.editedItem == undefined) {
+
+      if (this.editedItem === undefined) {
         await lastValueFrom(this.tileSrv.addTag({
           id: 0, // 0 makes the database use autoincrementing.
           name: this.form.value.name
@@ -36,6 +37,7 @@ export class NewTagComponent {
           name: this.form.value.name
         }));
       }
+
       this.dialogRef.close();
     }
   }

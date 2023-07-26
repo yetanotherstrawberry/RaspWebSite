@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between w-100">
+  <h1 mat-dialog-title>Error</h1>
+  <button mat-icon-button aria-label="Close" mat-dialog-close cdkFocusInitial>
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content>
+  <p *ngIf="message === undefined">
+    An error has occurred.
+  </p>
+  <p *ngIf="message !== undefined">
+    {{message}}
+  </p>
+</div>

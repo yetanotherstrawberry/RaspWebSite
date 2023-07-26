@@ -3,7 +3,7 @@ import { inject, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { CanActivateFn, Router, RouterModule } from '@angular/router';
-import { JwtModule } from "@auth0/angular-jwt";
+import { JwtModule, JWT_OPTIONS } from "@auth0/angular-jwt";
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -19,6 +19,7 @@ import { NewTagComponent } from '../admin/new-tag/new-tag.component';
 import { TagsComponent } from '../admin/tags/tags.component';
 import { IndexComponent } from '../admin/index/index.component';
 import { LoginComponent } from './login/login.component';
+import { ErrorComponent } from './error/error.component';
 
 import { AdminModule } from '../admin/admin.module';
 
@@ -30,6 +31,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NotFoundComponent } from './notfound/notfound.component';
 
 const canActivateTeam: CanActivateFn =
   async (): Promise<boolean> => {
@@ -44,22 +47,32 @@ const canActivateTeam: CanActivateFn =
   }
 };
 
+export function jwtOptionsFactory(loginSrv: LoginService) {
+  return {
+    tokenGetter: () => loginSrv.getToken()
+  }
+}
+
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
     PortfolioComponent,
-    LoginComponent
+    LoginComponent,
+    ErrorComponent,
+    NotFoundComponent,
   ],
   imports: [
     CommonModule,
     BrowserModule,
     HttpClientModule,
     JwtModule.forRoot({
-      config: {
-        tokenGetter: () => localStorage.getItem("access_token")
-      },
+      jwtOptionsProvider: {
+        provide: JWT_OPTIONS,
+        useFactory: jwtOptionsFactory,
+        deps: [LoginService]
+      }
     }),
     FormsModule,
     RouterModule.forRoot([
@@ -76,9 +89,10 @@ const canActivateTeam: CanActivateFn =
           { path: 'tiles', component: TilesComponent },
           { path: 'newtile', component: NewTileComponent },
           { path: 'newtag', component: NewTagComponent },
-          { path: 'tags', component: TagsComponent },
+          { path: 'tags', component: TagsComponent }
         ]
       },
+      { path: '**', component: NotFoundComponent }
     ]),
     MatSlideToggleModule,
     MatButtonModule,
@@ -87,6 +101,7 @@ const canActivateTeam: CanActivateFn =
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     BrowserAnimationsModule,
     AdminModule,
   ],

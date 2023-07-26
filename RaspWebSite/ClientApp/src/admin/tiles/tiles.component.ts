@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Tile, TileService } from '../../services/tile.service';
+import { ApiService, Tile } from '../../services/api.service';
 import { NewTileComponent } from '../new-tile/new-tile.component';
 
 @Component({
@@ -11,7 +11,7 @@ export class TilesComponent {
   items: Tile[] | null = null;
   displayedColumns: string[] = ['name', 'options'];
 
-  constructor(private tileSrv: TileService, public dialog: MatDialog) {
+  constructor(private tileSrv: ApiService, public dialog: MatDialog) {
     this.downloadItems();
   }
 

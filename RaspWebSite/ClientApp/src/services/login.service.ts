@@ -64,3 +64,8 @@ interface Token extends JwtPayload {
   name: string;
   nameId: string;
 }
+
+interface LoginDTO {
+  name: string;
+  password: string;
+}

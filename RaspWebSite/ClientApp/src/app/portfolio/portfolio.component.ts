@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Tile, TileService } from '../../services/tile.service';
+import { Tile, ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-portfolio',
@@ -15,7 +15,7 @@ export class PortfolioComponent {
     this.gridColumns = (window.innerWidth <= this.breakWidth) ? 1 : 2;
   }
 
-  constructor(tileSrv: TileService) {
+  constructor(tileSrv: ApiService) {
     tileSrv.getTiles().subscribe(tiles => {
       this.tiles = tiles;
     });
